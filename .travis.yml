@@ -1,10 +1,10 @@
 language: java
 
 install: true
-script: ./gradlew check jacocoTestReport sonarqube -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANISATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN
+script: ./gradlew check
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - ./gradlew jacocoTestReport sonarqube -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANISATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN && bash <(curl -s https://codecov.io/bash)
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
