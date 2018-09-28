@@ -1,1 +1,2 @@
 [![Build Status](https://travis-ci.org/hWorblehat/jraph.svg?branch=master)](https://travis-ci.org/hWorblehat/jraph)
+[![Coverage](https://codecov.io/gh/hWorblehat/jraph/branch/master/graph/badge.svg)](https://codecov.io/gh/hWorblehat/jraph)
