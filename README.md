@@ -1,2 +1,3 @@
 [![Build Status](https://travis-ci.org/hWorblehat/jraph.svg?branch=master)](https://travis-ci.org/hWorblehat/jraph)
 [![Coverage](https://codecov.io/gh/hWorblehat/jraph/branch/master/graph/badge.svg)](https://codecov.io/gh/hWorblehat/jraph)
+[![sonarcloud](https://sonarcloud.io/api/project_badges/measure?project=hWorblehat_jraph&metric=alert_status)](https://sonarcloud.io/dashboard?id=hWorblehat_jraph)
