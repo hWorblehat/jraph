@@ -15,11 +15,19 @@ jobs:
           || exit $?
       bash <(curl -s https://codecov.io/bash)
 
+  - stage: checkDeploy
+    if: "(type != push) AND (branch = master)"
+    script: |
+      GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew -m release || exit $?
+      REPO_URL=$(git remot get-url origin) || exit $?
+      git push -n --tags https://${GITHUB_TOKEN}:x-oauth-basic@${REPO_URL#https://} || exit $?
+
   - stage: deploy
     if: "(type = push) AND (branch = master)"
     script: |
       GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew release || exit $?
-      printf "${GITHUB_USER}\n${GITHUB_TOKEN}\n" | git push --tags origin master || exit $?
+      REPO_URL=$(git remot get-url origin) || exit $?
+      git push --tags https://${GITHUB_TOKEN}:x-oauth-basic@${REPO_URL#https://} || exit $?
     deploy:
       provider: releases
       api_key: ${GITHUB_TOKEN}
