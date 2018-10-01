@@ -4,6 +4,7 @@ jobs:
   include:
 
   - stage: check
+    name: test
     install: true
     script: ./gradlew check
     after_success: |
@@ -12,20 +13,30 @@ jobs:
           -Dsonar.organization=$SONAR_ORGANISATION \
           -Dsonar.host.url=$SONAR_HOST_URL \
           -Dsonar.login=$SONAR_LOGIN \
+          -Dsonar.branch.name=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH} \
+          -Dsonar.branch.target=$([ -z "$TRAVIS_PULL_REQUEST_BRANCH" ] && echo "master" || echo "$TRAVIS_BRANCH") \
           || exit $?
       bash <(curl -s https://codecov.io/bash)
 
-  - stage: checkDeploy
+  - name: checkDeploy
     if: "(type != push) AND (branch = master)"
     script: |
-      GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew -m release || exit $?
+      [[ "$TRAVIS_COMMIT_MESSAGE" =~ scope=([a-z]+) ]]
+      SCOPE=${BASH_REMATCH[1]:-patch}
+      [[ "$TRAVIS_COMMIT_MESSAGE" =~ stage=([a-z]+) ]]
+      STAGE=${BASH_REMATCH[1]:-final}
+      GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew -m release -Pscope=$SCOPE -Pstage=$STAGE || exit $?
       REPO_URL=$(git remote get-url origin) || exit $?
       git push -n --tags https://${GITHUB_TOKEN}:x-oauth-basic@${REPO_URL#https://} || exit $?
 
   - stage: deploy
     if: "(type = push) AND (branch = master)"
     script: |
-      GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew release || exit $?
+      [[ "$TRAVIS_COMMIT_MESSAGE" =~ scope=([a-z]+) ]]
+      SCOPE=${BASH_REMATCH[1]:-patch}
+      [[ "$TRAVIS_COMMIT_MESSAGE" =~ stage=([a-z]+) ]]
+      STAGE=${BASH_REMATCH[1]:-final}
+      GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew release -Pscope=$SCOPE -Pstage=$STAGE || exit $?
       REPO_URL=$(git remote get-url origin) || exit $?
       git push --tags https://${GITHUB_TOKEN}:x-oauth-basic@${REPO_URL#https://} || exit $?
     deploy:
@@ -34,8 +45,6 @@ jobs:
       file_glob: true
       file: build/libs/*
       skip_cleanup: true
-      on:
-        tags: true
 
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

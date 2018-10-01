@@ -1,7 +1,7 @@
-package org.hWorblehat.jraph;
+package org.hworblehat.jraph;
 
-import org.hWorblehat.jraph.util.MinPriorityQueue;
-import org.hWorblehat.jraph.util.PairingHeap;
+import org.hworblehat.jraph.util.MinPriorityQueue;
+import org.hworblehat.jraph.util.PairingHeap;
 
 import java.util.ArrayList;
 import java.util.Collections;
