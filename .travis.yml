@@ -4,6 +4,7 @@ jobs:
   include:
 
   - stage: check
+    name: test
     install: true
     script: ./gradlew check
     after_success: |
@@ -15,7 +16,7 @@ jobs:
           || exit $?
       bash <(curl -s https://codecov.io/bash)
 
-  - stage: checkDeploy
+  - name: checkDeploy
     if: "(type != push) AND (branch = master)"
     script: |
       GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew -m release || exit $?
