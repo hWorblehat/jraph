@@ -1,0 +1,26 @@
+jar {
+	inputs.with {
+		property('vendor', project.group)
+		property('version', "${project.version}")
+		property('title', project.basePackage)
+	}
+
+	doFirst {
+		manifest.attributes (
+				'Name':                   inputs.properties.title.replace('.', '/'),
+				'Created-By':             inputs.properties.vendor,
+				'Specification-Title':    inputs.properties.title,
+				'Specification-Version':  inputs.properties.version,
+				'Specification-Vendor':   inputs.properties.vendor,
+				'Implementation-Title':   inputs.properties.title,
+				'Implementation-Version': inputs.properties.version,
+				'Implementation-Vendor':  inputs.properties.vendor,
+		)
+	}
+}
+
+task('sourcesJar', type: Jar) {
+	classifier = 'sources'
+
+	from(project.sourceSets.main.allSource)
+}

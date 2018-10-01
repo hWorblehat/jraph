@@ -1,0 +1,58 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+	}
+}
+
+task("release") {
+	group = "Publishing"
+	description = "Publishes packages to artifact repositories, and tags git with the version number"
+	dependsOn 'tagVcsWithVersionTag'
+}
+
+apply plugin: 'maven-publish'
+apply plugin: com.jfrog.bintray.gradle.BintrayPlugin
+
+publishing {
+	publications {
+		main(MavenPublication) {
+			from components.java
+			artifact sourcesJar
+			//artifact javadocJar
+		}
+	}
+}
+
+bintray {
+	user = System.getenv('BINTRAY_USER')
+	key = System.getenv('BINTRAY_KEY')
+	publish = true
+	publications = ['main']
+
+	pkg {
+		repo = System.getenv('BINTRAY_REPO')
+		name = project.name
+		userOrg = System.getenv('BINTRAY_USER_ORG')
+		desc = project.description
+		licenses = ['Apache-2.0']
+
+		def githubRepoLocation = "${System.getenv('GH_ORG')}/${System.getenv('GH_PROJECT')}"
+		def githubProjectUrl = "https://github.com/${githubRepoLocation}"
+
+		websiteUrl = githubProjectUrl
+		vcsUrl = "${githubProjectUrl}.git"
+		githubRepo = githubRepoLocation
+
+		version {
+			name = version
+			vcsTag = gradletag.tags.versionTag.tag.toString()
+			released = new Date(project.buildTime.toEpochMilli())
+		}
+	}
+}
+
+tagVcsWithVersionTag.mustRunAfter bintrayUpload
+release.dependsOn bintrayUpload
