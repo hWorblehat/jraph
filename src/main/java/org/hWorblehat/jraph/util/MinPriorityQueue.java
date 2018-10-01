@@ -1,4 +1,4 @@
-package org.jraph.util;
+package org.hWorblehat.jraph.util;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

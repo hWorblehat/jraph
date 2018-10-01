@@ -1,7 +1,7 @@
-package org.jraph;
+package org.hWorblehat.jraph;
 
-import org.jraph.util.MinPriorityQueue;
-import org.jraph.util.PairingHeap;
+import org.hWorblehat.jraph.util.MinPriorityQueue;
+import org.hWorblehat.jraph.util.PairingHeap;
 
 import java.util.*;
 import java.util.function.*;

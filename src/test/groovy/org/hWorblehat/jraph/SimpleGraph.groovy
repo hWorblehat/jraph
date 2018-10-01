@@ -1,4 +1,4 @@
-package org.jraph
+package org.hWorblehat.jraph
 
 import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode
