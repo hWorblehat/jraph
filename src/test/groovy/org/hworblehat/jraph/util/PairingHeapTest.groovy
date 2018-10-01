@@ -1,4 +1,4 @@
-package org.hWorblehat.jraph.util
+package org.hworblehat.jraph.util
 
 import spock.lang.*
 
