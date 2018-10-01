@@ -8,13 +8,14 @@ jobs:
     install: true
     script: ./gradlew check
     after_success: |
+      TARGET_BRANCH=
       ./gradlew jacocoTestReport sonarqube \
           -Dsonar.projectKey=$SONAR_PROJECT_KEY \
           -Dsonar.organization=$SONAR_ORGANISATION \
           -Dsonar.host.url=$SONAR_HOST_URL \
           -Dsonar.login=$SONAR_LOGIN \
           -Dsonar.branch.name=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH} \
-          -Dsonar.branch.target=$([ -z "$TRAVIS_PULL_REQUEST_BRANCH" ] && echo "master" || echo "$TRAVIS_BRANCH")
+          -Dsonar.branch.target=$([ -z "$TRAVIS_PULL_REQUEST_BRANCH" ] && echo "master" || echo "$TRAVIS_BRANCH") \
           || exit $?
       bash <(curl -s https://codecov.io/bash)
 
