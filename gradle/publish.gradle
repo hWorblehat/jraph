@@ -47,8 +47,8 @@ bintray {
 		githubRepo = githubRepoLocation
 
 		version {
-			name = version
-			vcsTag = gradletag.tags.versionTag.tag.toString()
+			name = project.version
+			vcsTag = "${gradletag.tags.versionTag.tag}"
 			released = new Date(project.buildTime.toEpochMilli())
 		}
 	}
