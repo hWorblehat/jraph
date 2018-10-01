@@ -17,17 +17,17 @@ jobs:
 
   - stage: deploy
     if: "(type = push) AND (branch = master)"
-  script: |
-    GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew release || exit $?
-    echo "${GITHUB_USER}\n${GITHUB_TOKEN}\n" | git push --tags origin master || exit $?
-  deploy:
-    provider: releases
-    api_key: "${GITHUB_TOKEN}"
-    file_glob: true
-    file: build/libs/*
-    skip_cleanup: true
-    on:
-      tags: true
+    script: |
+      GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew release || exit $?
+      echo "${GITHUB_USER}\n${GITHUB_TOKEN}\n" | git push --tags origin master || exit $?
+    deploy:
+      provider: releases
+      api_key: ${GITHUB_TOKEN}
+      file_glob: true
+      file: build/libs/*
+      skip_cleanup: true
+      on:
+        tags: true
 
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
