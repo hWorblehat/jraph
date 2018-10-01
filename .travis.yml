@@ -8,7 +8,6 @@ jobs:
     install: true
     script: ./gradlew check
     after_success: |
-      TARGET_BRANCH=
       ./gradlew jacocoTestReport sonarqube \
           -Dsonar.projectKey=$SONAR_PROJECT_KEY \
           -Dsonar.organization=$SONAR_ORGANISATION \
