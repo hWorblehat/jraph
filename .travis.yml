@@ -19,14 +19,22 @@ jobs:
   - name: checkDeploy
     if: "(type != push) AND (branch = master)"
     script: |
-      GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew -m release || exit $?
+      [[ "$TRAVIS_COMMIT_MESSAGE" =~ scope=([a-z]+) ]]
+      SCOPE=${BASH_REMATCH[1]:-patch}
+      [[ "$TRAVIS_COMMIT_MESSAGE" =~ stage=([a-z]+) ]]
+      STAGE=${BASH_REMATCH[1]:-final}
+      GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew -m release -Pscope=$SCOPE -Pstage=$STAGE || exit $?
       REPO_URL=$(git remote get-url origin) || exit $?
       git push -n --tags https://${GITHUB_TOKEN}:x-oauth-basic@${REPO_URL#https://} || exit $?
 
   - stage: deploy
     if: "(type = push) AND (branch = master)"
     script: |
-      GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew release || exit $?
+      [[ "$TRAVIS_COMMIT_MESSAGE" =~ scope=([a-z]+) ]]
+      SCOPE=${BASH_REMATCH[1]:-patch}
+      [[ "$TRAVIS_COMMIT_MESSAGE" =~ stage=([a-z]+) ]]
+      STAGE=${BASH_REMATCH[1]:-final}
+      GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew release -Pscope=$SCOPE -Pstage=$STAGE || exit $?
       REPO_URL=$(git remote get-url origin) || exit $?
       git push --tags https://${GITHUB_TOKEN}:x-oauth-basic@${REPO_URL#https://} || exit $?
     deploy:
