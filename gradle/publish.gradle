@@ -39,7 +39,7 @@ bintray {
 		desc = project.description
 		licenses = ['Apache-2.0']
 
-		def githubRepoLocation = "${System.getenv('GH_ORG')}/${System.getenv('GH_PROJECT')}"
+		def githubRepoLocation = System.getenv('GH_PROJECT_PATH')
 		def githubProjectUrl = "https://github.com/${githubRepoLocation}"
 
 		websiteUrl = githubProjectUrl

@@ -1,10 +1,26 @@
 language: java
 
 install: true
-script: ./gradlew check
 
-after_success:
-  - ./gradlew jacocoTestReport sonarqube -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANISATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN && bash <(curl -s https://codecov.io/bash)
+jobs:
+  include:
+    - stage: check
+      install: true
+      script: ./gradlew check
+      after_success: ./gradlew jacocoTestReport sonarqube -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANISATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN && bash <(curl -s https://codecov.io/bash)
+
+    - stage: deploy
+      if: branch == master
+      script:
+        - GH_PROJECT_PATH=${TRAVIS_REPO_SLUG} ./gradlew release
+        - echo "${GITHUB_USER}\n${GITHUB_TOKEN}\n" | git push --tags origin master
+      deploy:
+        provider: releases
+        api_key: 'TODO'
+        file: 'build/libs/TODO'
+        skip_cleanup: true
+        on:
+          tags: true
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
