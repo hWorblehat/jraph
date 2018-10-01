@@ -34,8 +34,6 @@ jobs:
       file_glob: true
       file: build/libs/*
       skip_cleanup: true
-      on:
-        tags: true
 
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
