@@ -1,8 +1,12 @@
 package org.jraph
 
+import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.TupleConstructor
 
+import java.util.stream.Stream
+
+@CompileStatic
 class SimpleGraph implements DirectedGraph<String, Edge, Integer> {
 
 	SimpleGraph(){}
@@ -10,8 +14,8 @@ class SimpleGraph implements DirectedGraph<String, Edge, Integer> {
 	private final Set<Edge> edges = new HashSet<>()
 
 	@Override
-	Collection<Edge> getOutgoingEdges(String vertex) {
-		return edges.findAll { vertex == it.from }
+	Stream<Edge> getOutgoingEdges(String vertex) {
+		edges.stream().filter { it.from==vertex }
 	}
 
 	@Override

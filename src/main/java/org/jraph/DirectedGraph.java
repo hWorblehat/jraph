@@ -1,10 +1,10 @@
 package org.jraph;
 
-import java.util.Collection;
+import java.util.stream.Stream;
 
 public interface DirectedGraph<V, E, C> {
 
-	Collection<E> getOutgoingEdges(V vertex);
+	Stream<E> getOutgoingEdges(V vertex);
 
 	V getStartVertex(E edge);
 

@@ -5,6 +5,7 @@ import org.jraph.util.PairingHeap;
 
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.Stream;
 
 /**
  * A* route-finding algorithm.
@@ -52,17 +53,19 @@ public class AStar {
 
 			visited.add(current);
 
-			for (E edge : graph.getOutgoingEdges(current)) {
-				V neighbour = graph.getEndVertex(edge);
+			try(Stream<E> outgoing = graph.getOutgoingEdges(current)) {
+				outgoing.forEach(edge -> {
+					V neighbour = graph.getEndVertex(edge);
 
-				if (!visited.contains(neighbour)) {
-					C gScoreCandidate = add.apply(gScores.get(current), graph.getCost(edge));
+					if (!visited.contains(neighbour)) {
+						C gScoreCandidate = add.apply(gScores.get(current), graph.getCost(edge));
 
-					if (discovered.offer(neighbour, add.apply(gScoreCandidate, costEstimator.apply(neighbour, end)))) {
-						cameFrom.put(neighbour, edge);
-						gScores.put(neighbour, gScoreCandidate);
+						if (discovered.offer(neighbour, add.apply(gScoreCandidate, costEstimator.apply(neighbour, end)))) {
+							cameFrom.put(neighbour, edge);
+							gScores.put(neighbour, gScoreCandidate);
+						}
 					}
-				}
+				});
 			}
 		}
 
