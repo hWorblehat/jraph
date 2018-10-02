@@ -48,7 +48,7 @@ bintray {
 
 		version {
 			name = project.version
-			vcsTag = "${gradletag.tags.versionTag.tag}"
+			vcsTag = "${gradletag.tags.versionTag.tag.get()}"
 			released = new Date(project.buildTime.toEpochMilli())
 		}
 	}
