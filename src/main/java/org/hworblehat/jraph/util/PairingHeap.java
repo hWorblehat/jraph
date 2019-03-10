@@ -65,19 +65,27 @@ public class PairingHeap<E, P> implements MinPriorityQueue<E, P> {
 				return true; // Already min
 			}
 
-			// Extract subtree from heap
-			if (tree.prevSiblingOrParent.nextSibling == tree) {
-				tree.prevSiblingOrParent.nextSibling = tree.nextSibling;
-			} else {
-				assert tree.prevSiblingOrParent.firstChild == tree;
-				tree.prevSiblingOrParent.firstChild = tree.nextSibling;
-			}
-			tree.nextSibling = null;
-			tree.prevSiblingOrParent = null;
+			extractSubtree(tree);
 		}
 
 		root = merge(tree, root);
 		return true;
+	}
+
+	private void extractSubtree(PairingTree tree) {
+		// Extract subtree from heap
+		if (tree.prevSiblingOrParent.nextSibling == tree) {
+			tree.prevSiblingOrParent.nextSibling = tree.nextSibling;
+		} else {
+			assert tree.prevSiblingOrParent.firstChild == tree;
+			tree.prevSiblingOrParent.firstChild = tree.nextSibling;
+		}
+		if(tree.nextSibling!=null) {
+			tree.nextSibling.prevSiblingOrParent = tree.prevSiblingOrParent;
+		}
+
+		tree.nextSibling = null;
+		tree.prevSiblingOrParent = null;
 	}
 
 	@Nonnegative
