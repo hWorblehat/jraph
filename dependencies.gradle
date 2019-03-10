@@ -3,6 +3,15 @@ repositories {
     jcenter()
 }
 
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.codehaus.groovy') {
+            details.useVersion '2.5.6'
+            details.because "Older Grovvy versions don't work with Java 11"
+        }
+    }
+}
+
 dependencies {
 
     compileOnly 'com.google.code.findbugs:jsr305:3.+'
