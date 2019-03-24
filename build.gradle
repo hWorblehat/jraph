@@ -21,6 +21,10 @@ targetCompatibility = 1.8
 
 apply from: 'dependencies.gradle'
 
+jacoco {
+	toolVersion = '0.8.3'
+}
+
 if(System.env.CI) {
 
 	jacocoTestReport {

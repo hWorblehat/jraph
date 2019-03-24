@@ -26,3 +26,11 @@ gradle-app.setting
 *.iws
 *.iml
 out/
+
+####################################
+# Eclipse (& JLS, i.e. VSCode, Atom)
+####################################
+.project
+.classpath
+.settings/
+**/bin/

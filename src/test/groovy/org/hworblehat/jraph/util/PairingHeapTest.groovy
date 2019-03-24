@@ -99,4 +99,45 @@ class PairingHeapTest extends Specification {
 		'C' == head.get()
 	}
 
+	def "Decreasing priority does not orphan nodes"() {
+
+		given:
+		PairingHeap<String, Integer> heap = PairingHeap.create()
+		heap.offer('A', 1)
+		heap.offer('D', 4)
+		heap.offer('C', 3)
+		heap.offer('B', 2)
+
+		when:
+		heap.offer('B', 0)
+		heap.offer('C', -1)
+
+		then:
+		['C', 'B', 'A', 'D'] == (1..4).inject([]) { arr, _int -> arr << heap.poll().get() }
+		0 == heap.size()
+		!heap.poll().present
+	}
+
+	def "Decreasing priority does not duplicate nodes"() {
+
+		given:
+		PairingHeap<String, Integer> heap = PairingHeap.create()
+		heap.offer('B', 20)
+		heap.offer('E', 50)
+		heap.offer('D', 40)
+		heap.offer('C', 30)
+		heap.offer('A', 10)
+
+		when:
+		heap.offer('C', 15)
+		heap.offer('D', 5)
+
+
+		then:
+		['D', 'A', 'C', 'B', 'E'] == (1..5).inject([]) { arr, _int -> arr << heap.poll().get() }
+		0 == heap.size()
+		!heap.poll().present
+
+	}
+
 }
